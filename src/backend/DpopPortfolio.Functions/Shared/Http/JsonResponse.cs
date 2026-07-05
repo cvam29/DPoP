@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
 namespace DpopPortfolio.Functions.Shared.Http;
@@ -22,5 +23,16 @@ public static class JsonResponse
         await response.WriteStringAsync(JsonSerializer.Serialize(body, SerializerOptions));
 
         return response;
+    }
+
+    public static Task<HttpResponseData> CreateErrorAsync(
+        HttpRequestData request,
+        HttpStatusCode statusCode,
+        string error,
+        string message,
+        FunctionContext? context = null)
+    {
+        var traceId = context?.InvocationId ?? Guid.NewGuid().ToString("n");
+        return CreateAsync(request, statusCode, new ApiErrorResponse(error, message, traceId));
     }
 }

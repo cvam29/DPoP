@@ -1,17 +1,19 @@
 using System.Net;
+using DpopPortfolio.Functions.Shared.Configuration;
 using DpopPortfolio.Functions.Shared.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Options;
 
 namespace DpopPortfolio.Functions.Features.OAuth;
 
-public sealed class OAuthFunctions
+public sealed class OAuthFunctions(IOptions<DpopPortfolioOptions> options)
 {
     [Function(nameof(GetAuthorizationServerMetadata))]
-    public static Task<HttpResponseData> GetAuthorizationServerMetadata(
+    public Task<HttpResponseData> GetAuthorizationServerMetadata(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = ".well-known/oauth-authorization-server")] HttpRequestData request)
     {
-        var issuer = GetIssuer(request);
+        var issuer = options.Value.Issuer.TrimEnd('/');
 
         return JsonResponse.CreateAsync(
             request,
@@ -23,6 +25,7 @@ public sealed class OAuthFunctions
                 token_endpoint = $"{issuer}/oauth/token",
                 revocation_endpoint = $"{issuer}/oauth/revoke",
                 jwks_uri = $"{issuer}/.well-known/jwks.json",
+                audiences_supported = new[] { options.Value.Audience },
                 response_types_supported = new[] { "code" },
                 grant_types_supported = new[] { "authorization_code", "refresh_token" },
                 code_challenge_methods_supported = new[] { "S256" },
@@ -33,7 +36,7 @@ public sealed class OAuthFunctions
     }
 
     [Function(nameof(GetJwks))]
-    public static Task<HttpResponseData> GetJwks(
+    public Task<HttpResponseData> GetJwks(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = ".well-known/jwks.json")] HttpRequestData request)
     {
         return JsonResponse.CreateAsync(
@@ -47,7 +50,7 @@ public sealed class OAuthFunctions
     }
 
     [Function(nameof(Authorize))]
-    public static Task<HttpResponseData> Authorize(
+    public Task<HttpResponseData> Authorize(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "oauth/authorize")] HttpRequestData request)
     {
         return JsonResponse.CreateAsync(
@@ -61,7 +64,7 @@ public sealed class OAuthFunctions
     }
 
     [Function(nameof(Token))]
-    public static Task<HttpResponseData> Token(
+    public Task<HttpResponseData> Token(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "oauth/token")] HttpRequestData request)
     {
         return JsonResponse.CreateAsync(
@@ -75,7 +78,7 @@ public sealed class OAuthFunctions
     }
 
     [Function(nameof(Revoke))]
-    public static Task<HttpResponseData> Revoke(
+    public Task<HttpResponseData> Revoke(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "oauth/revoke")] HttpRequestData request)
     {
         return JsonResponse.CreateAsync(
@@ -86,17 +89,5 @@ public sealed class OAuthFunctions
                 error = "oauth_milestone_pending",
                 message = "Refresh-token revocation will remove the hashed token record and write an audit event."
             });
-    }
-
-    private static string GetIssuer(HttpRequestData request)
-    {
-        var configuredIssuer = Environment.GetEnvironmentVariable("DPOP_ISSUER");
-
-        if (!string.IsNullOrWhiteSpace(configuredIssuer))
-        {
-            return configuredIssuer.TrimEnd('/');
-        }
-
-        return $"{request.Url.Scheme}://{request.Url.Authority}".TrimEnd('/');
     }
 }

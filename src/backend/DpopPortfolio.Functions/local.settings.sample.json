@@ -3,9 +3,14 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "DPOP_ISSUER": "http://localhost:7071",
-    "DPOP_FRONTEND_ORIGIN": "http://localhost:3000",
-    "DPOP_CACHE_PROVIDER": "Memory",
-    "DPOP_STORAGE_PROVIDER": "Azurite"
+    "DpopPortfolio__Issuer": "http://localhost:7071",
+    "DpopPortfolio__Audience": "dpop-portfolio-api",
+    "DpopPortfolio__FrontendOrigin": "http://localhost:3000",
+    "DpopPortfolio__CacheProvider": "Memory",
+    "DpopPortfolio__StorageProvider": "Azurite",
+    "DpopPortfolio__TokenLifetimes__AuthorizationCodeMinutes": "5",
+    "DpopPortfolio__TokenLifetimes__AccessTokenMinutes": "15",
+    "DpopPortfolio__TokenLifetimes__RefreshTokenDays": "7",
+    "DpopPortfolio__TokenLifetimes__DpopProofSeconds": "300"
   }
 }

@@ -91,4 +91,4 @@ Rate-limited responses return `429` with `Retry-After` and rate-limit headers.
 - Demo users are seeded locally with hashed passwords and fixed roles: one user and one admin.
 - Refresh tokens are stored hashed server-side and DPoP-bound to the same key thumbprint as the access token.
 - Azure Functions Core Tools installation is documented but not installed automatically.
-- No Git remote is configured yet.
+- Git is initialized and synced to GitHub; deployment remotes are not configured yet.

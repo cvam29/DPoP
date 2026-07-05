@@ -7,6 +7,7 @@
    - Add typed configuration for issuer, audience, frontend origin, token lifetimes, cache provider, and storage provider.
    - Add CORS, shared error responses, request logging, and a health endpoint.
    - Add `docker-compose.yml` for Azurite and Redis.
+   - Status: completed in the backend foundation milestone.
    - Acceptance: backend builds, tests run, local dependencies are documented.
 
 2. Identity And OAuth Code Flow

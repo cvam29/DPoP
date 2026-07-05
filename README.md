@@ -5,6 +5,7 @@ Self-contained portfolio project demonstrating OAuth 2.0 Demonstrating Proof of 
 ## Repo Layout
 
 - `docs/` - architecture, implementation, and portfolio notes.
+- `DpopPortfolio.sln` - backend solution with Functions app and tests.
 - `src/backend/` - .NET 10 Azure Functions isolated-worker backend.
 - `src/frontend/` - Next.js App Router frontend.
 
@@ -29,15 +30,17 @@ Installed on this machine:
 Still needed for full Azure Functions local execution:
 
 - Azure Functions Core Tools v4.
+- Docker Desktop or compatible Docker runtime for `docker compose`.
 - Azurite for local Azure Storage emulation.
 - Redis or compatible cache for distributed replay/rate-limit demonstrations.
 
 ## Getting Started
 
-Backend build:
+Backend build and tests:
 
 ```powershell
-dotnet build .\src\backend\DpopPortfolio.Functions\DpopPortfolio.Functions.csproj
+dotnet build .\DpopPortfolio.sln
+dotnet test .\DpopPortfolio.sln
 ```
 
 Frontend build:
@@ -52,3 +55,11 @@ Azure Functions runtime execution requires Azure Functions Core Tools:
 ```powershell
 func start
 ```
+
+Local Azurite and Redis infrastructure can be started with:
+
+```powershell
+docker compose up -d
+```
+
+See [docs/local-development.md](docs/local-development.md) for local configuration, health checks, and infrastructure notes.

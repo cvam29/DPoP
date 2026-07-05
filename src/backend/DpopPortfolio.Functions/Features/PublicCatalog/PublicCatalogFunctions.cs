@@ -1,15 +1,18 @@
 using System.Net;
 using DpopPortfolio.Functions.Shared.Caching;
+using DpopPortfolio.Functions.Shared.Configuration;
 using DpopPortfolio.Functions.Shared.Http;
 using DpopPortfolio.Functions.Shared.RateLimiting;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Options;
 
 namespace DpopPortfolio.Functions.Features.PublicCatalog;
 
 public sealed class PublicCatalogFunctions(
     ICacheService cache,
-    IFixedWindowRateLimiter rateLimiter)
+    IFixedWindowRateLimiter rateLimiter,
+    IOptions<DpopPortfolioOptions> options)
 {
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);
     private static readonly TimeSpan RateLimitWindow = TimeSpan.FromMinutes(1);
@@ -48,7 +51,7 @@ public sealed class PublicCatalogFunctions(
             {
                 cache = new
                 {
-                    provider = "in-memory",
+                    provider = options.Value.CacheProvider,
                     ttlSeconds = (int)CacheDuration.TotalSeconds,
                     portfolioNote = "Redis-backed distributed caching is planned for the next infrastructure milestone."
                 },
