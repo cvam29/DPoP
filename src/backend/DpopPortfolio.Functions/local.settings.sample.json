@@ -1,0 +1,11 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "DPOP_ISSUER": "http://localhost:7071",
+    "DPOP_FRONTEND_ORIGIN": "http://localhost:3000",
+    "DPOP_CACHE_PROVIDER": "Memory",
+    "DPOP_STORAGE_PROVIDER": "Azurite"
+  }
+}
