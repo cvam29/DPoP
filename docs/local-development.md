@@ -8,15 +8,15 @@ This repo currently builds with the installed local SDKs:
 - Node.js `v24.18.0`
 - npm `11.16.0`
 
-Azure Functions Core Tools v4 is still required to run the backend host locally with `func start`. It is documented here but not installed automatically.
+Azure Functions Core Tools v4 is still required to run the backend host directly with `func start`. It is documented here but not installed automatically. The Aspire AppHost also needs Azure Functions Core Tools because it starts the Functions runtime as part of orchestration.
 
 ## Backend
 
 Build and test the backend solution:
 
 ```powershell
-dotnet build .\DpopPortfolio.sln
-dotnet test .\DpopPortfolio.sln
+dotnet build .\src\backend\DpopPortfolio.sln
+dotnet test .\src\backend\DpopPortfolio.sln
 ```
 
 Create a local Functions settings file from the sample when Core Tools is installed:
@@ -25,7 +25,15 @@ Create a local Functions settings file from the sample when Core Tools is instal
 Copy-Item .\src\backend\DpopPortfolio.Functions\local.settings.sample.json .\src\backend\DpopPortfolio.Functions\local.settings.json
 ```
 
-Start the local infrastructure:
+Run the Aspire AppHost when Docker and Azure Functions Core Tools are available:
+
+```powershell
+dotnet run --project .\src\backend\DpopPortfolio.AppHost\DpopPortfolio.AppHost.csproj
+```
+
+The AppHost models the Functions backend, Azurite host storage, and Redis cache in one local dashboard.
+
+Start the local infrastructure without Aspire:
 
 ```powershell
 docker compose up -d

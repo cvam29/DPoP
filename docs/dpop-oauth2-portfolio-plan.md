@@ -17,6 +17,7 @@ References:
 ## Architecture
 
 - Backend: .NET 10 Azure Functions isolated worker.
+- Local orchestration: .NET Aspire AppHost with ServiceDefaults, Azurite, and Redis resources.
 - Frontend: Next.js App Router.
 - Local durable storage: Azurite/Azure Table Storage.
 - Local distributed cache: Redis-compatible cache.
@@ -31,6 +32,8 @@ References:
 - `Features/Admin`: admin-only audit endpoint.
 - `Features/PublicCatalog`: cached public endpoint.
 - `Shared`: configuration, storage, rate limiting, errors, telemetry.
+- `DpopPortfolio.AppHost`: Aspire orchestration for the backend runtime and local infrastructure.
+- `DpopPortfolio.ServiceDefaults`: shared telemetry, resilience, service discovery, and health-check registration.
 
 ## Frontend Use-Case Structure
 
